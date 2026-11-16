@@ -1,0 +1,59 @@
+name: pose4-development
+
+services:
+  vscodenetnode:
+    image: ghcr.io/pfrey-htl-leonding/debiantigernetnodevscode:dev-image-v2026.09-1
+    pull_policy: missing
+    environment:
+      USER_ID: "${USER_ID:-1000}"
+      GROUP_ID: "${GROUP_ID:-1000}"
+      VNC_GEOMETRY: "${VNC_GEOMETRY:-1440x900}"
+      VNC_DEPTH: "24"
+      DESKTOP_VSCODE_EXTENSIONS: >-
+        bokuweb.vscode-ripgrep@0.2.2
+        gruntfuggly.todo-tree@0.0.226
+        johnpapa.angular2@22.0.0
+        ms-dotnettools.csharp@2.160.4
+        ms-dotnettools.csdevkit@3.40.204
+        peterder72.plantuml-live-editor@0.4.0
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://0.0.0.0:5000
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      # VNC has no authentication, so all services are published on host
+      # loopback only.
+      - "127.0.0.1:${VNC_HOST_PORT:-5900}:5900"
+      - "127.0.0.1:${NOVNC_HOST_PORT:-6080}:6080"
+      - "127.0.0.1:${ANGULAR_HOST_PORT:-4200}:4200"
+      - "127.0.0.1:${ASPNETCORE_HOST_PORT:-5050}:5000"
+    volumes:
+      - vscodenetnode-home:/home/developer
+      - ./shared:/home/developer/Desktop/shared
+    shm_size: "512m"
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:18-trixie
+    pull_policy: missing
+    environment:
+      POSTGRES_USER: pose4
+      POSTGRES_PASSWORD: pose4db
+      POSTGRES_DB: pose4
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pose4 -d pose4"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    ports:
+      - "127.0.0.1:${POSTGRES_HOST_PORT:-5432}:5432"
+    volumes:
+      # PostgreSQL 18 uses a version-specific data directory below this path.
+      - postgres-data:/var/lib/postgresql
+    restart: unless-stopped
+
+volumes:
+  vscodenetnode-home:
+  postgres-data:

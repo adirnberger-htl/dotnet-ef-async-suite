@@ -1,0 +1,46 @@
+@startuml
+
+abstract class Entity {
+    +Id: int
+    +Equals(obj: object): bool
+    +GetHashCode(): int
+}
+
+class SensorType {
+    +Name: String
+    +Sensors: ICollection<Sensor>
+}
+
+class Sensor {
+    +Name: String
+    +FirstSeen: DateTime
+    +SensorTypeId: int
+    +SensorType: SensorType
+    +Measurements: ICollection<Measurement>
+}
+
+class MeasurementType {
+    +Name: String
+    +Comment: String
+    +Measurements: ICollection<Measurement>
+}
+
+class Measurement {
+    +Value: double
+    +Time: DateTime
+    +SensorId: int
+    +MeasurementTypeId: int
+    +Sensor: Sensor
+    +MeasurementType: MeasurementType
+}
+
+Entity <|-- SensorType
+Entity <|-- Sensor
+Entity <|-- MeasurementType
+Entity <|-- Measurement
+
+SensorType "1" -- "*" Sensor
+Sensor "1" -- "*" Measurement
+MeasurementType "1" -- "*" Measurement
+
+@enduml

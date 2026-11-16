@@ -1,0 +1,32 @@
+@startuml CoreEntities
+
+title Persistence.Entities
+
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+
+namespace Persistence.Entities {
+    class BaseEntity {
+        +Id : int
+    }
+
+    class Pupil {
+        +LastName : string {required, maxLength=50}
+        +FirstName : string {required, maxLength=50}
+        +BirthDate : DateTime {required}
+        +SchoolClass : SchoolClass
+        +ToString() : string
+    }
+
+    class SchoolClass {
+        +Name : string
+        +Pupils : ICollection<Pupil>
+        +ToString() : string
+    }
+
+    BaseEntity <|-- Pupil
+    BaseEntity <|-- SchoolClass
+    SchoolClass "1" o-- "0..*" Pupil : pupils
+}
+
+@enduml

@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32112.339
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExportAnalyzerTest", "ExportAnalyzerTest\ExportAnalyzerTest.csproj", "{A3347EBE-7200-4297-87E8-08041C8C196D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExportAnalyzer", "ExportAnalyzer\ExportAnalyzer.csproj", "{8599B2AE-C975-4EE1-83B4-87F943AE11FA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A3347EBE-7200-4297-87E8-08041C8C196D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3347EBE-7200-4297-87E8-08041C8C196D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3347EBE-7200-4297-87E8-08041C8C196D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3347EBE-7200-4297-87E8-08041C8C196D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8599B2AE-C975-4EE1-83B4-87F943AE11FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8599B2AE-C975-4EE1-83B4-87F943AE11FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8599B2AE-C975-4EE1-83B4-87F943AE11FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8599B2AE-C975-4EE1-83B4-87F943AE11FA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7DBF0ABC-7BC5-4CC2-AE7E-0C9EE672597B}
+	EndGlobalSection
+EndGlobal

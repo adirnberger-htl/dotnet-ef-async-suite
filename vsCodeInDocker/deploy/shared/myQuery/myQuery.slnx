@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="MyQuery.UnitTests/MyQuery.UnitTests.csproj" />
+  <Project Path="MyQuery/MyQuery.csproj" />
+</Solution>

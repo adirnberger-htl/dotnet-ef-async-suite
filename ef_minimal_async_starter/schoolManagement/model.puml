@@ -1,0 +1,116 @@
+@startuml SchoolMgmtService
+
+title Services.SchoolMgmtService Queries
+
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+
+package "Services" {
+    class SchoolMgmtService {
+        -_dbContext : ApplicationDbContext
+        +SchoolMgmtService(dbContext : ApplicationDbContext)
+        +GetPupilsWithLaptop(schoolClassName : string?) : Task<Pupil[]>
+        +GetPupilsOfClassOlderThanAsync(schoolClassName : string, minAge : int) : Task<Pupil[]>
+        +GetTeachersForClassAsync(schoolClassName : string) : Task<IEnumerable<TeachersForClassResult>>
+        +GetLaptopsOfAdmin(teacherId : int) : Task<IEnumerable<SchoolLaptop>>
+    }
+}
+
+package "Persistence" {
+    class ApplicationDbContext
+}
+
+SchoolMgmtService --> ApplicationDbContext
+
+package "Persistence.Entities" {
+    class BaseEntity {
+        +Id : int
+    }
+
+    class Pupil {
+        +LastName : string {required, maxLength=50}
+        +FirstName : string {required, maxLength=50}
+        +BirthDate : DateTime {required}
+        +SchoolClassId : int
+        +SchoolClass : SchoolClass
+        +SchoolLaptop : SchoolLaptop?
+        +ToString() : string
+    }
+
+    class SchoolClass {
+        +Name : string {required, unique, maxLength=100}
+        +Pupils : ICollection<Pupil>
+        +Subjects : ICollection<Subject>
+        +ToString() : string
+    }
+
+    class SchoolLaptop {
+        +SerialNr : string {required, unique, maxLength=100}
+        +MakeAndModel : string
+        +InstalledSWImage : string
+        +PupilId : int?
+        +Pupil : Pupil?
+        +AdministratorId : int {required}
+        +Administrator : Teacher
+    }
+
+    class Subject {
+        +Title : string {required, unique, maxLength=100}
+        +Teachers : ICollection<Teacher>
+        +SchoolClasses : ICollection<SchoolClass>
+        +ToString() : string
+    }
+
+    class Teacher {
+        +LastName : string {required, maxLength=50}
+        +FirstName : string {required, maxLength=50}
+        +Subjects : ICollection<Subject>
+        +AdministeredLaptops : ICollection<SchoolLaptop>
+        +ToString() : string
+    }
+}
+
+package "Persistence.DTO" {
+    class TeachersForClassResult <<record>> {
+        +Subject : Subject
+        +Teachers : IEnumerable<Teacher>
+    }
+}
+
+BaseEntity <|-- Pupil
+BaseEntity <|-- SchoolClass
+BaseEntity <|-- SchoolLaptop
+BaseEntity <|-- Subject
+BaseEntity <|-- Teacher
+
+SchoolClass "1" o-- "0..*" Pupil : pupils
+Pupil "0..1" -- "0..1" SchoolLaptop : assigned laptop
+Teacher "1" -- "0..*" SchoolLaptop : administers
+SchoolClass "0..*" -- "0..*" Subject : subjects
+Subject "0..*" -- "0..*" Teacher : teachers
+
+TeachersForClassResult --> Subject
+TeachersForClassResult --> "0..*" Teacher
+
+note left of SchoolMgmtService
+  GetPupilsWithLaptop
+  - pupils with an assigned laptop
+  - optional school-class filter
+
+  GetPupilsOfClassOlderThanAsync
+  - filters by school class and minimum age
+
+  GetTeachersForClassAsync
+  - finds the class's subjects
+  - returns the teachers for each subject
+
+  GetLaptopsOfAdmin
+  - returns all laptops administered by a teacher
+end note
+
+note right of Pupil
+  FirstName, LastName, and BirthDate
+  form a unique combination.
+end note
+
+@enduml

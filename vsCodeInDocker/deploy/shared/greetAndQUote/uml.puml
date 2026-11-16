@@ -1,0 +1,61 @@
+@startuml
+
+package "Utility" <<module>> {
+    class CSV {
+        + string parseLine(string file)
+    }
+    
+    enum Language {
+        en
+        de
+        it
+    }
+
+    enum Formality {
+        formal
+        informal
+    }
+}
+
+package "Main" <<module>> {
+    class CommandParser {
+        + string verifyCommand()
+        + Response createResp()
+    }
+
+    class Program {
+        + string Main()
+        + void Answere(Response res)
+    }
+
+    class QuotesRepository {
+        - Random random
+        + string getRandomQuote(Language lan)
+    }
+
+    class GreetingsRepository {
+        - Dictionary<Tuple<Language, Formality, string>, string> greetings
+        + string getGreeting(string name, Formality formality, Language lan)
+    }
+
+    class Response {
+        + string Name
+        + string Greeting
+        + string Quote
+    
+        + Language Lang
+        + Formality Form
+    
+        + string getReadyResp()
+    }
+}
+
+' Relationships
+
+Engine --> CommandParser
+Engine --> GreetingsRepository
+Engine --> QuotesRepository
+CommandParser ..> Response : creates
+QuotesRepository --> CSV
+
+@enduml
